@@ -1,19 +1,19 @@
 name: API Tests - ServeRest
 
 on:
-# Executa em push para branches principais
+
 push:
 branches:
 - main
 - master
 - develop
-# Executa em Pull Requests
+
 pull_request:
 branches:
 - main
 - master
 - develop
-# Permite execução manual via GitHub Actions UI
+
 workflow_dispatch:
 inputs:
 test_folder:
@@ -30,41 +30,38 @@ options:
 - 'Flow (E2E)'
 - 'Data Cleanup'
 
-# Agendamento para execução diária (opcional)
+
 schedule:
-- cron: '0 6 * * *' # Executa às 6:00 UTC todos os dias
+- cron: '0 6 * * *'
 
 env:
 NODE_VERSION: '20'
 
 jobs:
-# ========================================
-# JOB 1: Testes Completos da API
-# ========================================
 api-tests:
 name: Executar Testes da API
 runs-on: ubuntu-latest
 steps:
-# Checkout do código
+
 - name: Checkout do repositório
 uses: actions/checkout@v4
 
-# Setup Node.js
+
 - name: Setup Node.js ${{ env.NODE_VERSION }}
 uses: actions/setup-node@v4
 with:
 node-version: ${{ env.NODE_VERSION }}
 cache: 'npm'
 
-# Instalar dependências
+
 - name: Instalar dependências
 run: npm ci
 
-# Criar diretório de relatórios
+
 - name: Criar diretório de relatórios
 run: mkdir -p reports
 
-# Executar testes (todos ou pasta específica)
+
 - name: Executar testes Newman
 id: newman-tests
 continue-on-error: true
@@ -100,7 +97,7 @@ npx newman run ServeRestAPITests.postman_collection.json \
 --color on
 fi
 
-# Upload do relatório HTML como artefato
+
 - name: Upload Relatório HTML
 uses: actions/upload-artifact@v4
 if: always()
@@ -109,7 +106,7 @@ name: newman-html-report
 path: reports/newman-report.html
 retention-days: 30
 
-# Upload do relatório JUnit como artefato
+
 - name: Upload Relatório JUnit
 uses: actions/upload-artifact@v4
 if: always()
@@ -118,7 +115,7 @@ name: newman-junit-report
 path: reports/junit-report.xml
 retention-days: 30
 
-# Publicar resultado dos testes JUnit
+
 - name: Publicar Resultados dos Testes
 uses: dorny/test-reporter@v1
 if: always()
@@ -128,7 +125,7 @@ path: reports/junit-report.xml
 reporter: java-junit
 fail-on-error: false
 
-# Resumo dos testes no GitHub Actions
+
 - name: Gerar Resumo
 if: always()
 run: |
@@ -152,16 +149,14 @@ else
 echo "**Alguns testes falharam. Verifique os relatórios.**" >> $GITHUB_STEP_SUMMARY
 fi
 
-# Falhar o job se os testes falharem
+
 - name: Verificar status dos testes
 if: steps.newman-tests.outcome == 'failure'
 run: |
 echo "::error::Alguns testes falharam! Verifique os relatórios para mais detalhes."
 exit 1
 
-# ========================================
-# JOB 2: Testes de Smoke (Execução Rápida)
-# ========================================
+
 smoke-tests:
 name: Smoke Tests
 runs-on: ubuntu-latest
@@ -187,9 +182,7 @@ npx newman run ServeRestAPITests.postman_collection.json \
 -r cli \
 --color on
 
-# ========================================
-# JOB 3: Deploy de Relatórios para GitHub Pages (opcional)
-# ========================================
+
 deploy-reports:
 name: Deploy Relatórios
 runs-on: ubuntu-latest
