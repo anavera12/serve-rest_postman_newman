@@ -1,0 +1,1529 @@
+{
+	"info": {
+		"_postman_id": "3b6dd6e1-5fad-4d91-9561-fad075a6a943",
+		"name": "ServeRestAPITests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25093858",
+		"_collection_link": "https://www.postman.com/aviation-saganist-50915222/workspace/serverest-e-commerce-api-tests/collection/25093858-3b6dd6e1-5fad-4d91-9561-fad075a6a943?action=share&source=collection_link&creator=25093858"
+	},
+	"item": [
+		{
+			"name": "User Admin",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Create User [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"//Armazena o valor(email) para reutilização.\r",
+											"const responseBody = pm.response.json();\r",
+											"\r",
+											"pm.environment.set(\"userId\", responseBody._id);\r",
+											"\r",
+											"\r",
+											"pm.test(\"Create User [201] - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Create User [200] - Verifica se o tempo da requisição está correto\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"nome\": \"Ana Clara Vera - Admin\",\r\n\t\"email\": \"{{$randomEmail}}\",\r\n\t\"password\": \"{{password}}\",\r\n\t\"administrador\": \"false\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User by ID [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"User by ID [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"Ana Clara Vera - Admin\", \"nome\", \"email\", \"password\",\r",
+											"    \"administrador\", \"false\", \"_id\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"var idUserObtido = pm.environment.get(\"userId\");\r",
+											"\r",
+											"pm.test(\"User by ID [200] - Verifica se o ID está correto\", function () {\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(idUserObtido);\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Update User [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro alterado com sucesso\", \"message\");\r",
+											"});\r",
+											"\r",
+											"//Armazena o valor do campo \"e-mail\" do body.\r",
+											"const body = JSON.parse(pm.request.body.raw);\r",
+											"\r",
+											"pm.environment.set(\"email\", body.email);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"Ana Clara Vera - Admin Update\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"administrador\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Admin [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Get User Admin [200] - Verifica se administrador foi alterado para true', function (){\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    pm.expect(pm.response.json().administrador).to.be.eql('true')\r",
+											"})\r",
+											"\r",
+											"var idUserObtido = pm.environment.get(\"userId\");\r",
+											"\r",
+											"pm.test(\"Get User Admin [200] - Verifica se o ID está correto\", function () {\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(idUserObtido);\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Create User (Duplicate Email) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create User (Duplicate Email) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Este email já está sendo usado\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\t\"nome\": \"Nome Repetido\",\r\n\t\"email\": \"{{email}}\",\r\n\t\"password\": \"{{password}}\",\r\n\t\"administrador\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User (Invalid ID) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Update User (Invalid ID) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"Este email já está sendo usado\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"Nome Repetido\",\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"administrador\": \"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/1234560000000000000",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"1234560000000000000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User by (Invalid ID) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"User by Invalid ID [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"id deve ter exatamente 16 caracteres alfanuméricos\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/******12345ABC",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"******12345ABC"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    pm.expect(pm.response.text()).to.include(\"Login realizado com sucesso\", \"Bearer\");\r",
+									"});\r",
+									"\r",
+									"//Armazenar valor (token).\r",
+									"const responseBody = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"token\", responseBody.authorization);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Create Product 1 [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Product [201] - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"//Armazena o valor (produto) para reutilização.    \r",
+											"const responseBody = pm.response.json();\r",
+											"\r",
+											"pm.environment.set(\"userId_product\", responseBody._id);\r",
+											"\r",
+											"\r",
+											"pm.test(\"Create Product [200] - Verifica se o tempo da requisição está correto\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{$randomFirstName}}\",\r\n    \"preco\": 470,\r\n    \"descricao\": \"Mouse - Produto 1\",\r\n    \"quantidade\": 381\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product by ID [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Product by ID [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"preco\", \"nome\", \"descricao\", \"quantidade\", \"_id\", \"mouse\", \"470\", \"381\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/produtos/{{userId_product}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"{{userId_product}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const body = JSON.parse(pm.request.body.raw);\r",
+											"\r",
+											"pm.environment.set(\"nome\", body.nome)\r",
+											"\r",
+											"\r",
+											"pm.test(\"Update Product [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"    \r",
+											"    pm.expect(pm.response.text()).to.include(\"Registro alterado com sucesso\", \"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Update Product [200] - Verifica se o tempo da requisição está correto\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomProductName}}\",\r\n  \"preco\": 10,\r\n  \"descricao\": \"Teclado\",\r\n  \"quantidade\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos/{{userId_product}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"{{userId_product}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Update Product [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Product by ID [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"preco\", \"nome\", \"descricao\", \"quantidade\", \"_id\", \"mouse\", \"10\", \"5\");\r",
+											"});\r",
+											"\r",
+											"var idProductObtido = pm.environment.get(\"userId_product\");\r",
+											"\r",
+											"pm.test(\"Get Update Product [200] - Verifica se o ID está correto\", function () {\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(idProductObtido);\r",
+											"\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/produtos/{{userId_product}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"{{userId_product}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product 2 [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Product [201] - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"//Armazena o valor (produto) para reutilização.    \r",
+											"const responseBody = pm.response.json();\r",
+											"\r",
+											"pm.environment.set(\"userId_product2\", responseBody._id);\r",
+											"\r",
+											"\r",
+											"pm.test(\"Create Product [200] - Verifica se o tempo da requisição está correto\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{$randomFirstName}}\",\r\n    \"preco\": 10000,\r\n    \"descricao\": \"Televisao - Produto 2\",\r\n    \"quantidade\": 400\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Create Product (Invalid Price) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Product (Invalid Price) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"preco deve ser um número positivo\", \"preco\", \"quantidade\", \"quantidade deve ser maior ou igual a 0\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{nome}}\",\r\n    \"preco\": -1,\r\n    \"descricao\": \"Jararaca\",\r\n    \"quantidade\": -10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product (Duplicate Name) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Product (Duplicate Name) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Já existe produto com esse nome\", \"message\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{nome}}\",\r\n    \"preco\": 10,\r\n    \"descricao\": \"Jararaca\",\r\n    \"quantidade\": 200\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Product (Invalid ID) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Update Product (Invalid ID) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"id deve ter exatamente 16 caracteres alfanuméricos\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"{{nome}}\",\r\n    \"preco\": 10,\r\n    \"descricao\": \"Jararaca\",\r\n    \"quantidade\": 200\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/produtos/****12345677878",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"****12345677878"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product by (Invalid ID) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Product by (Invalid ID) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"id deve ter exatamente 16 caracteres alfanuméricos\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/produtos/8372347209348-01239841-02-04382-03",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"8372347209348-01239841-02-04382-03"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "Create Cart [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Cart [201] - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+											"});\r",
+											"\r",
+											"//Armazena o valor (carrinho) para reutilização.    \r",
+											"const responseBody = pm.response.json();\r",
+											"\r",
+											"pm.environment.set(\"userId_cart\", responseBody._id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{userId_product}}\",\r\n      \"quantidade\": 2\r\n    },\r\n    {\r\n      \"idProduto\": \"{{userId_product2}}\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Product [200] - Validar o status 200 da requisição\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "_id",
+										"value": "{{userId_cart}}",
+										"type": "text"
+									},
+									{
+										"key": "precoTotal",
+										"value": "2000",
+										"type": "text"
+									},
+									{
+										"key": "quantidadeTotal",
+										"value": "2000",
+										"type": "text"
+									},
+									{
+										"key": "idUsuario",
+										"value": "{{userId}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Cart by ID [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Cart by ID [200] - Validar o status 200 da requisição\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos/{{userId_cart}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos",
+										"{{userId_cart}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "Flow (E2E)",
+			"item": [
+				{
+					"name": "Delete Cart [200] Flow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete Cart [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/carrinhos/concluir-compra",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carrinhos",
+								"concluir-compra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User [201] Flow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Armazena o valor(email) para reutilização.\r",
+									"const responseBody = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userId\", responseBody._id);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Create User [201] Flow - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"\r",
+									"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Create User [200] Flow - Verifica se o tempo da requisição está correto\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"nome\": \"Ana Clara Vera - Admin\",\r\n\t\"email\": \"{{$randomEmail}}\",\r\n\t\"password\": \"{{password}}\",\r\n\t\"administrador\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product 1 [201] Flow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create Product [201] Flow - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"\r",
+									"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Armazena o valor (produto) para reutilização.    \r",
+									"const responseBody = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userId_product\", responseBody._id);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Create Product [200] Flow - Verifica se o tempo da requisição está correto\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"{{$randomFirstName}}\",\r\n    \"preco\": 470,\r\n    \"descricao\": \"Mouse - Produto 1\",\r\n    \"quantidade\": 381\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product 2 [201] Flow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create Product [201] Flow - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"\r",
+									"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Armazena o valor (produto) para reutilização.    \r",
+									"const responseBody = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userId_product2\", responseBody._id);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Create Product [200] Flow - Verifica se o tempo da requisição está correto\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"{{$randomFirstName}}\",\r\n    \"preco\": 10000,\r\n    \"descricao\": \"Televisao - Produto 2\",\r\n    \"quantidade\": 400\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/produtos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cart [201] Flow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create Cart [201] Flow - Verifica o status 201, e se a resposta do body está correta\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"\r",
+									"\tpm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\", \"_id\");\r",
+									"});\r",
+									"\r",
+									"//Armazena o valor (carrinho) para reutilização.    \r",
+									"const responseBody = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userId_cart\", responseBody._id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{userId_product}}\",\r\n      \"quantidade\": 2\r\n    },\r\n    {\r\n      \"idProduto\": \"{{userId_product2}}\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carrinhos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carrinhos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Data Cleanup",
+			"item": [
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "Delete Cart [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Delete Cart [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos/concluir-compra",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos",
+										"concluir-compra"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Cart [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Cancel Cart [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Não foi encontrado carrinho para esse usuário\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos/cancelar-compra",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos",
+										"cancelar-compra"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Delete Product [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Delete Product [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/produtos/{{userId_product}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"{{userId_product}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product 2 [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Delete Product [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/produtos/{{userId_product2}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"produtos",
+										"{{userId_product2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Delete User [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Delete User [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{userId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://serverest.dev"
+		}
+	]
+}
