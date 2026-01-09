@@ -61,24 +61,6 @@ A collection está organizada por domínio, separando cenários **Positive**, **
 
 ---
 
-## 🧪 Principais validações implementadas
-
-- **Status Code** esperado (200/201/400)
-- **Mensagens de retorno** (ex.: "Cadastro realizado com sucesso", "Registro alterado com sucesso")
-- **Campos críticos** no body (ex.: `_id`, `administrador`)
-- **Persistência** (ID do usuário / produto retornado e reutilizado em chamadas seguintes)
-- **Performance básica** (tempo de resposta < 2000ms em alguns cenários)
-
----
-
-## 🔧 Pré-requisitos
-
-### Para executar pelo Newman (terminal)
-- **Node.js** (recomendado: LTS)
-- **Newman**
-- **newman-reporter-htmlextra** (para relatório HTML)
-
-Instalação:
-```bash
-npm install -g newman
-npm install -g newman-reporter-htmlextra
+## Como instalar o ambiente
+- Primeiro: Instalar o node em seu computador [Baixe o Node](https://nodejs.org/en/download/current)
+- Segundo: Instalar o Newman de forma global [Baixe as dependências do newman](https://www.npmjs.com/package/newman)
