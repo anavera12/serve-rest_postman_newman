@@ -438,7 +438,7 @@ npm run test:html
 
 Crie um arquivo `.env`:
    ```
-   USER_PASSWORD=123456
+   USER_PASSWORD="senha da sua escolha"
    ```
 O Postman pode usar variáveis de ambiente/exportadas via arquivos `.env.postman` (não commitados). Ao clonar:
    - Copie `env.postman_environment.json` ou crie um novo com as chaves necessárias.
