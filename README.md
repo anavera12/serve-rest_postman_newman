@@ -430,3 +430,15 @@ npm run test:html
 - [Newman HTML Extra Reporter](https://github.com/DannyDainton/newman-reporter-htmlextra)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Postman Learning Center](https://learning.postman.com/)
+
+---
+
+## Segurança e variáveis sensíveis
+
+Crie um arquivo `.env`:
+   ```
+   USER_PASSWORD=123456
+   ```
+O Postman pode usar variáveis de ambiente/exportadas via arquivos `.env.postman` (não commitados). Ao clonar:
+   - Copie `env.postman_environment.json` ou crie um novo com as chaves necessárias.
+   - Atualize o valor de `password` para o que estiver no seu `.env`.
