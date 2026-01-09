@@ -431,3 +431,9 @@ npm run test:html
 - [Newman HTML Extra Reporter](https://github.com/DannyDainton/newman-reporter-htmlextra)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Postman Learning Center](https://learning.postman.com/)
+
+---
+
+## Sobre tomada de decisão
+
+A primeira iniciativa que eu teria seria repetir o fluxo problemático em uma conta de teste, sendo assim possível rastrear e captar mais informações sobre o que pode estar ocorrendo. Após isso, documentaria o passo a passo com evidências e todas as informações que eu conseguisse obter com os testes manuais, e repassaria para os times responsáveis.
