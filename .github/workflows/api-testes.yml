@@ -1,6 +1,3 @@
-# ServeRest API Tests - CI/CD Pipeline
-# Executa testes automatizados da collection Postman com Newman
-# Gera relatórios HTML personalizados e JUnit para integração
 name: API Tests - ServeRest
 
 on:
