@@ -1,7 +1,6 @@
 # ServeRest API Tests - CI/CD Pipeline
 # Executa testes automatizados da collection Postman com Newman
 # Gera relatórios HTML personalizados e JUnit para integração
-
 name: API Tests - ServeRest
 
 on:
@@ -46,7 +45,7 @@ jobs:
 # JOB 1: Testes Completos da API
 # ========================================
 api-tests:
-name: 🔬 Executar Testes da API
+name: Executar Testes da API
 runs-on: ubuntu-latest
 steps:
 # Checkout do código
@@ -136,7 +135,7 @@ fail-on-error: false
 - name: Gerar Resumo
 if: always()
 run: |
-echo "## 🧪 Resultados dos Testes da API ServeRest" >> $GITHUB_STEP_SUMMARY
+echo "## Resultados dos Testes da API ServeRest" >> $GITHUB_STEP_SUMMARY
 echo "" >> $GITHUB_STEP_SUMMARY
 echo "| Informação | Valor |" >> $GITHUB_STEP_SUMMARY
 echo "|------------|-------|" >> $GITHUB_STEP_SUMMARY
