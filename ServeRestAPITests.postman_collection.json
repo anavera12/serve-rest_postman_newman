@@ -21,7 +21,7 @@
 									"script": {
 										"exec": [
 											"//Armazena o valor(email) para reutilização.\r",
-											"const responseBody = pm.response.json();\r",
+											"var responseBody = pm.response.json();\r",
 											"\r",
 											"pm.environment.set(\"userId\", responseBody._id);\r",
 											"\r",
@@ -125,7 +125,7 @@
 											"});\r",
 											"\r",
 											"//Armazena o valor do campo \"e-mail\" do body.\r",
-											"const body = JSON.parse(pm.request.body.raw);\r",
+											"var body = JSON.parse(pm.request.body.raw);\r",
 											"\r",
 											"pm.environment.set(\"email\", body.email);"
 										],
@@ -351,7 +351,7 @@
 									"});\r",
 									"\r",
 									"//Armazenar valor (token).\r",
-									"const responseBody = pm.response.json();\r",
+									"var responseBody = pm.response.json();\r",
 									"\r",
 									"pm.environment.set(\"token\", responseBody.authorization);"
 								],
@@ -408,7 +408,7 @@
 											"\r",
 											"\r",
 											"//Armazena o valor (produto) para reutilização.    \r",
-											"const responseBody = pm.response.json();\r",
+											"var responseBody = pm.response.json();\r",
 											"\r",
 											"pm.environment.set(\"userId_product\", responseBody._id);\r",
 											"\r",
@@ -495,7 +495,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"const body = JSON.parse(pm.request.body.raw);\r",
+											"var body = JSON.parse(pm.request.body.raw);\r",
 											"\r",
 											"pm.environment.set(\"nome\", body.nome)\r",
 											"\r",
@@ -605,7 +605,7 @@
 											"\r",
 											"\r",
 											"//Armazena o valor (produto) para reutilização.    \r",
-											"const responseBody = pm.response.json();\r",
+											"var responseBody = pm.response.json();\r",
 											"\r",
 											"pm.environment.set(\"userId_product2\", responseBody._id);\r",
 											"\r",
@@ -862,7 +862,7 @@
 											"});\r",
 											"\r",
 											"//Armazena o valor (carrinho) para reutilização.    \r",
-											"const responseBody = pm.response.json();\r",
+											"var responseBody = pm.response.json();\r",
 											"\r",
 											"pm.environment.set(\"userId_cart\", responseBody._id);"
 										],
@@ -992,54 +992,188 @@
 				},
 				{
 					"name": "Negative",
-					"item": []
+					"item": [
+						{
+							"name": "Delete Cart [200] Negative",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Delete Cart [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos/concluir-compra",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos",
+										"concluir-compra"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Cart (Invalid Product) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Cart (Invalid Product) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Produto não encontrado\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"@@**!!AAAnnnn1122983\",\r\n      \"quantidade\": 2\r\n    },\r\n    {\r\n      \"idProduto\": \"@@**!!AAAnnnn112298363263\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Cart (Duplicate Product) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Create Cart (Duplicate Product) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"\tpm.expect(pm.response.text()).to.include(\"Não é permitido possuir produto duplicado\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"@@**!!AAAnnnn1122983\",\r\n      \"quantidade\": 2\r\n    },\r\n    {\r\n      \"idProduto\": \"@@**!!AAAnnnn1122983\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Cart by (Invalid ID) [400]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get Cart by (Invalid ID) [400] - Verifica o status 400, e se a resposta do body está correta\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"\r",
+											"    pm.expect(pm.response.text()).to.include(\"id deve ter exatamente 16 caracteres alfanuméricos\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/carrinhos/***@@123aaa",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"carrinhos",
+										"***@@123aaa"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
 		{
 			"name": "Flow (E2E)",
 			"item": [
-				{
-					"name": "Delete Cart [200] Flow",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Delete Cart [200] - Verifica o status 200, e se a resposta do body está correta\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"\r",
-									"\tpm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {},
-								"requests": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/carrinhos/concluir-compra",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"carrinhos",
-								"concluir-compra"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "Create User [201] Flow",
 					"event": [
@@ -1048,7 +1182,7 @@
 							"script": {
 								"exec": [
 									"//Armazena o valor(email) para reutilização.\r",
-									"const responseBody = pm.response.json();\r",
+									"var responseBody = pm.response.json();\r",
 									"\r",
 									"pm.environment.set(\"userId\", responseBody._id);\r",
 									"\r",
@@ -1109,7 +1243,7 @@
 									"\r",
 									"\r",
 									"//Armazena o valor (produto) para reutilização.    \r",
-									"const responseBody = pm.response.json();\r",
+									"var responseBody = pm.response.json();\r",
 									"\r",
 									"pm.environment.set(\"userId_product\", responseBody._id);\r",
 									"\r",
@@ -1169,7 +1303,7 @@
 									"\r",
 									"\r",
 									"//Armazena o valor (produto) para reutilização.    \r",
-									"const responseBody = pm.response.json();\r",
+									"var responseBody = pm.response.json();\r",
 									"\r",
 									"pm.environment.set(\"userId_product2\", responseBody._id);\r",
 									"\r",
@@ -1228,7 +1362,7 @@
 									"});\r",
 									"\r",
 									"//Armazena o valor (carrinho) para reutilização.    \r",
-									"const responseBody = pm.response.json();\r",
+									"var responseBody = pm.response.json();\r",
 									"\r",
 									"pm.environment.set(\"userId_cart\", responseBody._id);"
 								],
