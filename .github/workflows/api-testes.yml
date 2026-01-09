@@ -1,4 +1,4 @@
-name: Postman CI Tests
+name: Teste API - Postman CI/CD (relatório Newman)
 
 on:
   push:
