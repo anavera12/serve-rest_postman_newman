@@ -369,6 +369,7 @@ serve-rest_postman_newman/
 ---
 
 ## Relatórios
+<img width="1162" height="952" alt="image" src="https://github.com/user-attachments/assets/ebbb5986-5f09-42b3-bd68-59341ef5a7c9" />
 
 ### HTML Extra Reporter
 
