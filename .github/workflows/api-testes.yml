@@ -1,47 +1,36 @@
-name: API Tests - ServeRest
+name: Postman CI Tests
 
 on:
   push:
   pull_request:
 
 jobs:
-  api-tests:
+  newman:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: v20.17.0
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Create reports directory
-        run: mkdir -p reports
-
-      - name: Run Newman Tests
+      - name: Run Newman collection
         run: |
+          mkdir -p reports
           npx newman run ServeRestAPITests.postman_collection.json \
             -e env.postman_environment.json \
-            -r cli,htmlextra,junit \
-            --reporter-htmlextra-export ./reports/newman-report.html \
-            --reporter-junit-export ./reports/junit-report.xml
+            -r cli,htmlextra \
+            --reporter-htmlextra-export ./reports/newman-report.html
 
-      - name: Upload HTML Report
+      - name: Upload Newman report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: newman-html-report
           path: reports/newman-report.html
-          retention-days: 30
-
-      - name: Upload JUnit Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: newman-junit-report
-          path: reports/junit-report.xml
           retention-days: 30

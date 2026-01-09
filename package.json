@@ -6,7 +6,7 @@
 "scripts": {
 "test": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json",
 "test:html": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json -r htmlextra --reporter-htmlextra-export ./reports/newman-report.html",
-"test:ci": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json -r cli,htmlextra,junit --reporter-htmlextra-export ./reports/newman-report.html --reporter-htmlextra-title 'ServeRest API Tests Report' --reporter-htmlextra-browserTitle 'ServeRest API Report' --reporter-htmlextra-showEnvironmentData --reporter-htmlextra-showGlobalData --reporter-junit-export ./reports/junit-report.xml",
+"test:ci": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export ./reports/newman-report.html --reporter-htmlextra-title 'ServeRest API Tests Report' --reporter-htmlextra-browserTitle 'ServeRest API Report' --reporter-htmlextra-showEnvironmentData --reporter-htmlextra-showGlobalData",
 "test:smoke": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json --folder 'Auth' -r cli",
 "test:users": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json --folder 'User Admin' -r cli,htmlextra --reporter-htmlextra-export ./reports/users-report.html",
 "test:products": "newman run ServeRestAPITests.postman_collection.json -e env.postman_environment.json --folder 'Product' -r cli,htmlextra --reporter-htmlextra-export ./reports/products-report.html",
@@ -24,7 +24,6 @@
 "license": "MIT",
 "devDependencies": {
 "newman": "^6.2.1",
-"newman-reporter-htmlextra": "^1.23.1",
-"newman-reporter-junit": "^2.0.0"
+"newman-reporter-htmlextra": "^1.23.1"
 }
 }
