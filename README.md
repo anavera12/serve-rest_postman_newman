@@ -320,59 +320,22 @@ npx newman run ServeRestAPITests.postman_collection.json -e env.postman_environm
 
 ## Pipeline CI/CD
 
-A pipeline está configurada no GitHub Actions e automatiza a execução dos testes.
+A pipeline enxuta está definida em `.github/workflows/api-tests.yml`. Ela roda automaticamente em todos os **pushes** e **pull requests** do repositório e gera o relatório HTML do Newman como artefato.
 
-### Arquivo de Configuração
+### Passos executados
 
-`.github/workflows/api-tests.yml`
+1. Checkout do código na máquina de execução
+2. Setup do Node.js 20 (através da ação oficial `actions/setup-node@v4`)
+3. Instalação das dependências com `npm install`
+4. Execução da collection `ServeRestAPITests.postman_collection.json` via Newman com o reporter `htmlextra`
+5. Exportação do relatório para `reports/newman-report.html`
+6. Upload do artefato `newman-html-report` (HTML) a cada execução
 
-### Triggers de Execução
+### Observações
 
-| Evento | Condição |
-|--------|----------|
-| **Push** | Branches: `main`, `master`, `develop` |
-| **Pull Request** | Branches: `main`, `master`, `develop` |
-| **Schedule** | Diariamente às 06:00 UTC |
-| **Manual** | Via GitHub Actions UI (workflow_dispatch) |
-
-### Jobs da Pipeline
-
-#### 1. api-tests (Testes Completos)
-
-- Checkout do código
-- Setup Node.js 20
-- Instalação de dependências (`npm ci`)
-- Execução dos testes com Newman
-- Upload de artefatos (relatórios HTML e JUnit)
-- Publicação dos resultados com Test Reporter
-- Geração de resumo no GitHub Actions
-
-#### 2. smoke-tests (Testes Rápidos)
-
-- Executado apenas em Pull Requests
-- Roda somente os testes de autenticação
-- Validação rápida antes do merge
-
-#### 3. deploy-reports (Publicação)
-
-- Executado apenas na branch `main`
-- Publica relatórios no GitHub Pages
-- Relatório acessível via URL pública
-
-### Artefatos Gerados
-
-| Artefato | Formato | Retenção |
-|----------|---------|----------|
-| newman-html-report | HTML | 30 dias |
-| newman-junit-report | XML | 30 dias |
-
-### Execução Manual
-
-1. Acesse a aba **Actions** no repositório
-2. Selecione **API Tests - ServeRest**
-3. Clique em **Run workflow**
-4. (Opcional) Selecione uma pasta específica
-5. Clique em **Run workflow**
+- O workflow é simples e não possui schedules nem jobs paralelos.
+- O único artefato publicado é o relatório HTML (`newman-html-report`) com retenção de 30 dias.
+- Para executar manualmente, basta ir em **Actions → Teste API - Postman CI/CD (relatório Newman)** e clicar em **Run workflow**.
 
 ---
 
