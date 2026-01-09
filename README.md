@@ -434,7 +434,6 @@ npm run test:html
 
 ---
 
-<<<<<<< HEAD
 ## Segurança e variáveis sensíveis
 
 Crie um arquivo `.env`:
@@ -444,8 +443,3 @@ Crie um arquivo `.env`:
 O Postman pode usar variáveis de ambiente/exportadas via arquivos `.env.postman` (não commitados). Ao clonar:
    - Copie `env.postman_environment.json` ou crie um novo com as chaves necessárias.
    - Atualize o valor de `password` para o que estiver no seu `.env`.
-=======
-## Sobre tomada de decisão
-
-A primeira iniciativa que eu teria seria repetir o fluxo problemático em uma conta de teste, sendo assim possível rastrear e captar mais informações sobre o que pode estar ocorrendo. Após isso, documentaria o passo a passo com evidências e todas as informações que eu conseguisse obter com os testes manuais, e repassaria para os times responsáveis.
->>>>>>> ee8bf396ed5c6b812237906948c0bb1c083fb4ac
